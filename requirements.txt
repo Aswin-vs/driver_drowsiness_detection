@@ -1,0 +1,40 @@
+# ── Core deep learning ─────────────────────────────────────────────────────────
+# tensorflow-cpu 2.15 is the last version before the Keras 3 split.
+# It is the most stable choice and supports Python 3.9 – 3.11.
+# Use Python 3.11 (not 3.12) with this version.
+# TF 2.16+ uses Keras 3 which REMOVES ImageDataGenerator — do NOT upgrade.
+tensorflow-cpu==2.15.0
+
+# ── TensorBoard — training visualisation (required by train.py) ────────────────
+tensorboard
+
+# ── Alarm audio ────────────────────────────────────────────────────────────────
+# pygame is used by alarm.py to generate and play tones in a background thread.
+# No WAV files needed -- tones are synthesised from numpy sine waves.
+# Fallback: winsound (Windows built-in) or terminal bell if pygame is absent.
+pygame>=2.5.0
+
+# ── Computer vision & utilities ────────────────────────────────────────────────
+opencv-python>=4.8.0
+numpy>=1.24.0
+matplotlib>=3.7.0
+seaborn>=0.12.0
+scikit-learn>=1.3.0
+pandas>=2.0.0
+
+# ══════════════════════════════════════════════════════════════════════════════
+# GPU OPTIONS (do not pip install these alongside tensorflow-cpu — pick ONE)
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# OPTION A — AMD / Intel GPU on Windows via DirectML (your AMD Vega 8):
+#   pip uninstall tensorflow-cpu -y
+#   pip install tensorflow-cpu==2.10.0
+#   pip install tensorflow-directml-plugin
+#   Note: Vega 8 is an integrated GPU with ~2 GB shared RAM.
+#         For this ~2900-image dataset CPU training is often just as fast.
+#
+# OPTION B — NVIDIA GPU (CUDA):
+#   pip uninstall tensorflow-cpu -y
+#   pip install tensorflow[and-cuda]
+#   Requires CUDA 12 + cuDNN installed separately.
+# ══════════════════════════════════════════════════════════════════════════════
