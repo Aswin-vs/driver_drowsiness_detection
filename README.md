@@ -426,48 +426,4 @@ is far more dangerous than a false alarm (false positive).
 | `plots/comparison_metrics.png`       | Side-by-side bar chart of all four metrics         |
 | `comparison_results.csv`             | Numeric results table ready for your report        |
 
----
 
-## Viva Preparation
-
-**Q: Why does the dataset have 4 folders but the model only has 2 classes?**
-The original Kaggle dataset captures two drowsiness signals separately — eye
-state (Closed/Open) and mouth state (yawn/no_yawn). Our project goal is to
-detect overall driver drowsiness as a single binary decision. `prepare_dataset.py`
-merges the 4 folders into 2 binary labels before training.
-
-**Q: Why are Open and no_yawn both Alert?**
-An alert driver has eyes open and is not yawning. Either condition independently
-signals an attentive, safe state.
-
-**Q: Why are Closed and yawn both Drowsy?**
-Closed eyes and yawning are the two most reliable visual indicators of fatigue.
-Grouping both under Drowsy reflects how real-world driver monitoring systems
-treat both as actionable danger signals.
-
-**Q: Why compare CNN and MobileNetV2 specifically?**
-CNN from scratch establishes a baseline showing what the model can learn from
-our small dataset alone. MobileNetV2 shows the benefit of transfer learning.
-This directly addresses the comparative study in the abstract.
-
-**Q: What is the two-phase MobileNetV2 training strategy?**
-Phase 1 trains only the custom classification head with the base frozen,
-letting the head converge before any base layers are touched. Phase 2 unfreezes
-the top 100 base layers and fine-tunes at LR = 1e-5 to adapt high-level features
-to the drowsiness domain without destroying the base's general knowledge.
-
-**Q: Why is CONSECUTIVE_FRAMES = 15 used in real-time detection?**
-A single mispredicted frame from a blink or lighting change should not trigger
-an alert. Requiring 15 consecutive drowsy predictions (~0.5 seconds at 30 fps)
-adds temporal stability without sacrificing response speed.
-
-**Q: Can an AMD Vega 8 GPU be used for training?**
-Yes, via the DirectML plugin (`tensorflow-directml-plugin`). However, the
-Vega 8 is an integrated GPU sharing system RAM with the CPU (~2 GB), so for
-this dataset size CPU training is equally fast or faster. GPU acceleration
-provides the most benefit on dedicated GPUs with 4+ GB of VRAM.
-
-**Q: Why is Recall more important than Precision here?**
-Missing a drowsy driver (false negative) risks a real accident. A false alarm
-(false positive) is merely inconvenient. We track Recall closely and use
-F1-Score as the primary balanced comparison metric.
